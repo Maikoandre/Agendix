@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from .forms import ProfessorAEERegistrationForm, SessionForm, UserForm
 from .models import Professor, ProfessorAEE, Session, Student, User
 
-@login_required(login_url='login')
+#@login_required(login_url='login')
 def index(request):
     if request.method == "POST":
         form = SessionForm(request.POST)
@@ -128,3 +128,7 @@ def logout_view(request):
         redirect('login_professor_aee')
     else:
         redirect('index')
+
+def profile_view(request, pk):
+    students = get_object_or_404(Student, pk=pk)
+    return render(request, 'students/profile.html', {'students': students})

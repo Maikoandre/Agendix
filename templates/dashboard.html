@@ -252,19 +252,32 @@
 
                   <td class="align-middle text-center">
                     <div class="d-flex justify-content-center gap-2">
+                      {% with first_student=session.students.first %}
                       <a
+                        {%
+                        if
+                        first_student
+                        %}
+                        href="{% url 'student_detail' first_student.id %}"
+                        {%
+                        else
+                        %}
                         href="#"
-                        class="btn btn-info btn-sm mb-0"
+                        {%
+                        endif
+                        %}
+                        class="btn btn-info btn-sm mb-0 {% if not first_student %}disabled{% endif %}"
                         title="Detalhes"
-                      >Detalhes
+                        >Detalhes
                         <i class="fa fa-eye"></i>
                       </a>
+                      {% endwith %}
 
                       <a
                         href="#"
                         class="btn btn-warning btn-sm mb-0"
                         title="Editar"
-                      >Editar
+                        >Editar
                         <i class="fa fa-edit"></i>
                       </a>
 
@@ -275,7 +288,8 @@
                           class="btn btn-danger btn-sm mb-0"
                           title="Excluir"
                           onclick="return confirm('Deseja realmente excluir este atendimento?');"
-                        >Excluir
+                        >
+                          Excluir
                           <i class="fa fa-trash"></i>
                         </button>
                       </form>

@@ -1,0 +1,51 @@
+from django import forms
+from .models import Session
+
+allowed_times = [
+    ("07:30-08:00", "07:30 - 08:00"),
+    ("08:00-08:30", "08:00 - 08:30"),
+    ("08:30-09:00", "08:30 - 09:00"),
+    ("09:00-09:30", "09:00 - 09:30"),
+    ("09:30-10:00", "09:30 - 10:00"),
+    ("10:00-10:30", "10:00 - 10:30"),
+    ("10:30-11:00", "10:30 - 11:00"),
+    ("11:00-11:30", "11:00 - 11:30"),
+    ("13:30-14:00", "13:30 - 14:00"),
+    ("14:00-14:30", "14:00 - 14:30"),
+    ("14:30-15:00", "14:30 - 15:00"),
+    ("15:00-15:30", "15:00 - 15:30"),
+    ("15:30-16:00", "15:30 - 16:00"),
+    ("16:00-16:30", "16:00 - 16:30"),
+    ("16:30-17:00", "16:30 - 17:00"),
+    ("17:00-17:30", "17:00 - 17:30"),
+    ("19:30-20:00", "19:30 - 20:00"),
+    ("20:00-20:30", "20:00 - 20:30"),
+    ("20:30-21:00", "20:30 - 21:00"),
+    ("21:00-21:30", "21:00 - 21:30"),
+    ("21:30-22:00", "21:30 - 22:00"),
+]
+
+
+class SessionForm(forms.ModelForm):
+    time = forms.ChoiceField(
+        choices=allowed_times,
+        widget=forms.Select(attrs={"class": "form-select"}),
+        label="Hora",
+        required=True
+    )
+
+    class Meta:
+        model = Session
+        fields = ['students', 'date', 'time', 'place', 'notes']
+        widgets = {
+            'students': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'place': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Local da sessão'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Notas sobre a sessão'}),
+        }
+
+    def save(self, commit=True):
+        session = super().save(commit=False)
+        if commit:
+            session.save()
+        return session

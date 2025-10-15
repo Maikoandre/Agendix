@@ -35,9 +35,10 @@ class ProfessorAEE(models.Model):
         return f"{self.professor.user.name} - {self.speciality}"
 
 class Session(models.Model):
-    date = models.DateTimeField()
-    place = models.CharField(max_length=150)
-    notes = models.TextField()
+    date = models.DateField()
+    time = models.TimeField(null=True, blank=True)
+    place = models.CharField(max_length=150, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
     students = models.ManyToManyField(Student, through='SessionAttendance', related_name="sessions")
 
     def __str__(self):

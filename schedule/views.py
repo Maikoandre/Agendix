@@ -1,7 +1,11 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Session
-from .forms import SessionForm
+from .models import Session, User
+from .forms import SessionForm, UserForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='login')
 def index(request):
     if request.method == "POST":
         form = SessionForm(request.POST)
@@ -13,3 +17,40 @@ def index(request):
     
     sessions = Session.objects.all()
     return render(request, 'dashboard.html', {'form': form, 'sessions': sessions})
+
+def login(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        password = request.POST.get('password')
+        user = authenticate(request, username=name, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Name or password invalid.')
+    
+    return render(request, 'authentication/sign-in.html')
+
+def register_users(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            User.objects.create(
+                name=form.cleaned_data['name'],
+                email=form.cleaned_date['email'],
+                birth_date=form.cleaned_date['birth_date'],
+                gender=form.cleaned_date['gender'],
+                phone=form.cleaned_date['phone'],
+                password=form.cleaned_date['password']
+                
+            )
+            return redirect('register_users')
+    else:
+        form = UserForm()
+        
+    return render(request, 'authentication/sign-up.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')

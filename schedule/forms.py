@@ -1,28 +1,13 @@
 from django import forms
-from .models import Session
+from .models import Session, User
 
 allowed_times = [
-    ("07:30-08:00", "07:30 - 08:00"),
-    ("08:00-08:30", "08:00 - 08:30"),
-    ("08:30-09:00", "08:30 - 09:00"),
-    ("09:00-09:30", "09:00 - 09:30"),
-    ("09:30-10:00", "09:30 - 10:00"),
-    ("10:00-10:30", "10:00 - 10:30"),
-    ("10:30-11:00", "10:30 - 11:00"),
-    ("11:00-11:30", "11:00 - 11:30"),
-    ("13:30-14:00", "13:30 - 14:00"),
-    ("14:00-14:30", "14:00 - 14:30"),
-    ("14:30-15:00", "14:30 - 15:00"),
-    ("15:00-15:30", "15:00 - 15:30"),
-    ("15:30-16:00", "15:30 - 16:00"),
-    ("16:00-16:30", "16:00 - 16:30"),
-    ("16:30-17:00", "16:30 - 17:00"),
-    ("17:00-17:30", "17:00 - 17:30"),
-    ("19:30-20:00", "19:30 - 20:00"),
-    ("20:00-20:30", "20:00 - 20:30"),
-    ("20:30-21:00", "20:30 - 21:00"),
-    ("21:00-21:30", "21:00 - 21:30"),
-    ("21:30-22:00", "21:30 - 22:00"),
+    ("07:30-08:30", "08:30 - 09:30"),
+    ("09:00-10:30", "10:30 - 11:30"),
+    ("13:30-14:30", "14:30 - 15:30"),
+    ("15:30-16:30", "16:30 - 17:30"),
+    ("19:30-20:30", "20:30 - 21:30"),
+    ("21:30-22:30", "22:30 - 23:30"),
 ]
 
 
@@ -49,3 +34,16 @@ class SessionForm(forms.ModelForm):
         if commit:
             session.save()
         return session
+
+
+class UserForm(forms.ModelForm):
+    class Meta():
+        model = User
+        fields = ['name', 'birth_date', 'email', 'gender', 'birth_place', 'password']
+        name = forms.CharField(max_length=150)
+        email = forms.EmailField()
+        birth_date = forms.DateField()
+        gender = forms.CharField(max_length=1)
+        birth_place = forms.CharField(max_length=100)
+        phone = forms.CharField(max_length=15)
+        password =forms.CharField(max_length=128)

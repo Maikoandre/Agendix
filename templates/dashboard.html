@@ -1,4 +1,6 @@
-{% extends '_base.html' %} {% load static %} {% block content %}
+{% extends '_base.html' %} 
+{% load static %}
+{% block content %}
 <div class="container-fluid py-4">
   <div class="row">
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
@@ -10,7 +12,7 @@
                 <p class="text-sm mb-0 text-uppercase font-weight-bold">
                   Atendimentos de hoje
                 </p>
-                <h5 class="font-weight-bolder"></h5>
+                <h5 class="font-weight-bolder">{{ context.today_sessions }}</h5>
                 <p class="mb-0">
                   <span class="text-success text-sm font-weight-bolder"></span>
                 </p>
@@ -39,16 +41,16 @@
                 <p class="text-sm mb-0 text-uppercase font-weight-bold">
                   Alunos cadastrados
                 </p>
-                <h5 class="font-weight-bolder">2,300</h5>
+                <h5 class="font-weight-bolder">{{ context.students }}</h5>
                 <p class="mb-0">
                   <span class="text-success text-sm font-weight-bolder"
-                    >+3%</span
+                    ></span
                   >
-                  since last week
+                  
                 </p>
               </div>
             </div>
-            <div class="col-4 text-end">
+            {% comment %} <div class="col-4 text-end">
               <div
                 class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle"
               >
@@ -118,7 +120,7 @@
               >
                 <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
               </div>
-            </div>
+            </div> {% endcomment %}
           </div>
         </div>
       </div>
@@ -264,21 +266,17 @@
                   >
                     Time
                   </th>
-                  <th
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder"
-                  >
-                    Notes
-                  </th>
+                  
                 </tr>
               </thead>
               <tbody>
-                {% for appointment in appointments %}
+                {% for session in sessions %}
                 <tr>
-                  <td class="text-sm">{{ appointment.name }}</td>
-                  <td class="text-sm">{{ appointment.email }}</td>
-                  <td class="text-sm">{{ appointment.date }}</td>
-                  <td class="text-sm">{{ appointment.time }}</td>
-                  <td class="text-sm">{{ appointment.notes }}</td>
+                  <td class="text-sm">{{ session.student.name }}</td>
+                  <td class="text-sm">{{ session.student.email }}</td>
+                  <td class="text-sm">{{ session.date }}</td>
+                  <td class="text-sm">{{ session.time }}</td>
+                  
                 </tr>
                 {% empty %}
                 <tr>
@@ -293,8 +291,8 @@
         </div>
       </div>
     </div>
-
-    <div class="col-12 mt-4">
+    
+    {% comment %} <div class="col-12 mt-4">
       <div class="card h-100">
         <div class="card-header pb-0 pt-3 bg-transparent">
           <h6 class="text-capitalize">All Appointments & Team</h6>
@@ -370,7 +368,7 @@
                   </td>
                 </tr>
                 {% endfor %}
-
+                
                 <!-- Team members rows -->
                 <tr>
                   <td>
@@ -465,10 +463,11 @@
                 <!-- Copy the rest of your team rows here, matching the column structure -->
               </tbody>
             </table>
+             {% endcomment %}
           </div>
         </div>
       </div>
     </div>
   </div>
-  {% endblock content %}
 </div>
+{% endblock content %}

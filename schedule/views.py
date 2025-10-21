@@ -1,11 +1,12 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Session, User
+from .models import Session, User, Student
 from .forms import SessionForm, UserForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from datetime import datetime, date
 
-@login_required(login_url='login')
+#@login_required(login_url='login')
 def index(request):
     if request.method == "POST":
         form = SessionForm(request.POST)
@@ -16,7 +17,15 @@ def index(request):
         form = SessionForm()
     
     sessions = Session.objects.all()
-    return render(request, 'dashboard.html', {'form': form, 'sessions': sessions})
+    students = Student.objects.count()
+    now = datetime.now().date()
+    today_sessions_count = Session.objects.filter(date=now).count()
+    context = {
+        'sessions': sessions,
+        'students': students,
+        'today_sessions': today_sessions_count,
+    }
+    return render(request, 'dashboard.html', {'form': form, 'context': context})
 
 def login(request):
     if request.method == 'POST':

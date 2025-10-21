@@ -95,7 +95,7 @@ def create_sessions_and_attendance(students_list, num_sessions=10):
     print("Criando sessões...")
     for _ in range(num_sessions):
         session = Session.objects.create(
-            date=fake.date_between(start_date='-6m', end_date='today'),
+            date=fake.date_between(start_date='-6m', end_date='-1d'),
             time=f"{random.randint(8, 17)}:00",
             place=f"Sala de Recursos {random.randint(1, 5)}",
             notes=fake.paragraph(nb_sentences=2)
@@ -110,7 +110,24 @@ def create_sessions_and_attendance(students_list, num_sessions=10):
                     student=student,
                     present=random.choice([True, False, True]) # Mais chance de estar presente
                 )
-    print(f"{num_sessions} sessões criadas.")
+    
+    # Create a session for today
+    session = Session.objects.create(
+        date=date.today(),
+        time=f"{random.randint(8, 17)}:00",
+        place=f"Sala de Recursos {random.randint(1, 5)}",
+        notes="Sessão de hoje."
+    )
+    if len(students_list) >= 5:
+        students_for_session = random.sample(students_list, k=random.randint(3, 5))
+        for student in students_for_session:
+            SessionAttendance.objects.create(
+                session=session,
+                student=student,
+                present=True
+            )
+
+    print(f"{num_sessions + 1} sessões criadas.")
 
 def create_proposals_reviews_reports_plans(students_list, profs_aee_list):
     """ Cria os demais itens (Planos, Relatórios, etc.) para cada aluno. """

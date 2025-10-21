@@ -16,14 +16,16 @@ def index(request):
     else:
         form = SessionForm()
     
-    sessions = Session.objects.all()
+    sessions = Session.objects.all().order_by('date', 'time')
     students = Student.objects.count()
+    all_students = Student.objects.all()
     now = datetime.now().date()
     today_sessions_count = Session.objects.filter(date=now).count()
     context = {
         'sessions': sessions,
         'students': students,
         'today_sessions': today_sessions_count,
+        'all_students': all_students,
     }
     return render(request, 'dashboard.html', {'form': form, 'context': context})
 
@@ -63,3 +65,8 @@ def register_users(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def delete_session(request, session_id):
+    session = get_object_or_404(Session, id=session_id)
+    session.delete()
+    return redirect('index')

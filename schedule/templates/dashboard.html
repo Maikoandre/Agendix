@@ -1,0 +1,337 @@
+{% extends '_base.html' %} {% load static %} {% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <div class="card">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">
+                  Atendimentos de hoje
+                </p>
+                <h5 class="font-weight-bolder">{{ context.today_sessions }}</h5>
+              </div>
+            </div>
+            <div class="col-4 text-end">
+              <div
+                class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle"
+              >
+                <i
+                  class="ni ni-money-coins text-lg opacity-10"
+                  aria-hidden="true"
+                ></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <div class="card">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">
+                  Alunos cadastrados
+                </p>
+                <h5 class="font-weight-bolder">{{ context.students }}</h5>
+              </div>
+            </div>
+            <div class="col-4 text-end">
+              <div
+                class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle"
+              >
+                <i
+                  class="ni ni-world text-lg opacity-10"
+                  aria-hidden="true"
+                ></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <div class="card">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">
+                  New Clients
+                </p>
+                <h5 class="font-weight-bolder">+3,462</h5>
+              </div>
+            </div>
+            <div class="col-4 text-end">
+              <div
+                class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle"
+              >
+                <i
+                  class="ni ni-paper-diploma text-lg opacity-10"
+                  aria-hidden="true"
+                ></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6">
+      <div class="card">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">
+                  Sales
+                </p>
+                <h5 class="font-weight-bolder">$103,430</h5>
+              </div>
+            </div>
+            <div class="col-4 text-end">
+              <div
+                class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle"
+              >
+                <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-lg-7 mb-lg-0 mb-4">
+      <div class="card z-index-2 h-100">
+        <div class="card-header pb-0 pt-3 bg-transparent">
+          <h6 class="text-capitalize">Visão geral de agendamentos</h6>
+          <p class="text-sm mb-0">
+            <i class="fa fa-calendar text-primary"></i>
+            <span class="font-weight-bold"
+              >Tendência mensal de agendamentos</span
+            >
+          </p>
+        </div>
+        <div class="card-body p-3">
+          <div class="chart">
+            <canvas
+              id="appointments-chart"
+              class="chart-canvas"
+              height="150"
+            ></canvas>
+          </div>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+        const appointmentsCount = [12, 19, 14, 17, 22, 25, 20];
+
+        const ctx = document
+          .getElementById("appointments-chart")
+          .getContext("2d");
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: months,
+            datasets: [
+              {
+                label: "Appointments",
+                data: appointmentsCount,
+                borderColor: "rgba(54, 162, 235, 1)",
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: "rgba(54, 162, 235, 1)",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } },
+          },
+        });
+      </script>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card h-100">
+        <div class="card-header pb-0 pt-3 bg-transparent">
+          <h6 class="text-capitalize">Agende um atendimento</h6>
+        </div>
+        <div class="card-body p-3">
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="{{ form.students.id_for_label }}" class="form-label"
+                >Aluno</label
+              >
+              {{ form.students }} {{ form.students.errors }}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.date.id_for_label }}" class="form-label"
+                >Data</label
+              >
+              {{ form.date }} {{ form.date.errors }}
+            </div>
+            <div class="mb-3">
+              {{ form.time.label_tag }} {{ form.time }} {{ form.time.errors }}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.place.id_for_label }}" class="form-label"
+                >Local</label
+              >
+              {{ form.place }} {{ form.place.errors }}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.notes.id_for_label }}" class="form-label"
+                >Notas</label
+              >
+              {{ form.notes }} {{ form.notes.errors }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+              Agendar atendimento
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 mt-4">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-header pb-0 pt-3 bg-transparent border-bottom-0">
+          <h6 class="text-capitalize mb-0">Todos os Agendamentos</h6>
+          <p class="text-sm text-muted mb-0">
+            Veja seus agendamentos programados abaixo.
+          </p>
+        </div>
+
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table
+              class="table align-items-center mb-0 table-hover table-striped table-bordered"
+            >
+              <thead>
+                <tr>
+                  <th
+                    class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-3"
+                  >
+                    Aluno
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7"
+                  >
+                    Data
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7"
+                  >
+                    Hora
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7"
+                  >
+                    Local
+                  </th>
+                  <th
+                    class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7 pe-3"
+                  >
+                    Ações
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for session in context.sessions %}
+                <tr>
+                  <td class="ps-3">
+                    <div class="d-flex align-items-center">
+                      <div class="d-flex flex-column justify-content-center">
+                        {% for student in session.students.all %}
+                        <h6 class="mb-0 text-dark">{{ student.user.name }}</h6>
+                        {% empty %}
+                        <h6 class="mb-0 text-sm text-muted fst-italic">—</h6>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <p class="font-weight-normal mb-0">
+                      {{ session.date|date:"d/m/Y" }}
+                    </p>
+                  </td>
+
+                  <td>
+                    <span class="font-weight-normal mb-0"
+                      >{{ session.time }}</span
+                    >
+                  </td>
+
+                  <td>
+                    <p class="font-weight-normal mb-0">
+                      {{ session.place }}
+                    </p>
+                  </td>
+
+                  <td class="align-middle text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                      <a
+                        href="#"
+                        class="btn btn-info btn-sm mb-0"
+                        title="Detalhes"
+                      >
+                        <i class="fa fa-eye"></i>
+                      </a>
+
+                      <a
+                        href="#"
+                        class="btn btn-warning btn-sm mb-0"
+                        title="Editar"
+                      >
+                        <i class="fa fa-edit"></i>
+                      </a>
+
+                      <form action="#" method="post" class="d-inline mb-0">
+                        {% csrf_token %}
+                        <button
+                          type="submit"
+                          class="btn btn-danger btn-sm mb-0"
+                          title="Excluir"
+                          onclick="return confirm('Deseja realmente excluir este atendimento?');"
+                        >
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center py-4">
+                    <p class="text-muted mb-0">
+                      Nenhum agendamento encontrado.
+                    </p>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+

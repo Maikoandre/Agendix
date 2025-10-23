@@ -275,7 +275,7 @@
                   <tr>
                     <td class="text-sm">
                       {% for student in session.students.all %}
-                        {{ student.user.name }} ({{ student.user.email }}){% if not forloop.last %}<br>{% endif %}
+                        {{ student.name }} ({{ student.email }}){% if not forloop.last %}<br>{% endif %}
                       {% endfor %}
                     </td>
                     <td class="text-sm">{{ session.date|date:"d/m/Y" }}</td>
@@ -286,6 +286,7 @@
                         href="{% url 'delete_session' session.id %}"
                         class="btn btn-danger btn-sm"
                         >Delete</a
+                        
                       >
                     </td>
                   </tr>

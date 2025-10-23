@@ -48,11 +48,11 @@ def register_users(request):
         if form.is_valid():
             User.objects.create(
                 name=form.cleaned_data['name'],
-                email=form.cleaned_date['email'],
-                birth_date=form.cleaned_date['birth_date'],
-                gender=form.cleaned_date['gender'],
-                phone=form.cleaned_date['phone'],
-                password=form.cleaned_date['password']
+                email=form.cleaned_data['email'],
+                birth_date=form.cleaned_data['birth_date'],
+                gender=form.cleaned_data['gender'],
+                phone=form.cleaned_data['phone'],
+                password=form.cleaned_data['password']
                 
             )
             return redirect('register_users')

@@ -33,6 +33,7 @@ class SessionForm(forms.ModelForm):
         session = super().save(commit=False)
         if commit:
             session.save()
+            self.save_m2m()
         return session
 
 

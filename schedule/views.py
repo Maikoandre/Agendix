@@ -16,7 +16,7 @@ def index(request):
     else:
         form = SessionForm()
     
-    sessions = Session.objects.all().order_by('date', 'time')
+    sessions = Session.objects.all().order_by('date', 'time').reverse()
     students = Student.objects.count()
     all_students = Student.objects.all()
     now = datetime.now().date()

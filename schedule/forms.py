@@ -2,12 +2,24 @@ from django import forms
 from .models import Session, User
 
 allowed_times = [
-    ("07:30-08:30", "08:30 - 09:30"),
-    ("09:00-10:30", "10:30 - 11:30"),
-    ("13:30-14:30", "14:30 - 15:30"),
-    ("15:30-16:30", "16:30 - 17:30"),
-    ("19:30-20:30", "20:30 - 21:30"),
-    ("21:30-22:30", "22:30 - 23:30"),
+    
+    # Bloco da Manhã
+    ("07:30-08:30", "07:30 - 08:30"),
+    ("08:30-09:30", "08:30 - 09:30"),
+    ("09:30-10:30", "09:30 - 10:30"),
+    ("10:30-11:30", "10:30 - 11:30"),
+    
+    # Bloco da Tarde
+    ("13:30-14:30", "13:30 - 14:30"),
+    ("14:30-15:30", "14:30 - 15:30"),
+    ("15:30-16:30", "15:30 - 16:30"),
+    ("16:30-17:30", "16:30 - 17:30"),
+    
+    # Bloco da Noite
+    ("19:30-20:30", "19:30 - 20:30"),
+    ("20:30-21:30", "20:30 - 21:30"),
+    ("21:30-22:30", "21:30 - 22:30"),
+    ("22:30-23:30", "22:30 - 23:30"),
 ]
 
 
@@ -26,7 +38,10 @@ class SessionForm(forms.ModelForm):
             'students': forms.SelectMultiple(attrs={'class': 'form-control'}),
             'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'place': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Local da sessão'}),
-            'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Notas sobre a sessão'}),
+            'notes': forms.Textarea(attrs={
+                'rows': 4, 
+                'class': 'form-control'
+            }),
         }
 
     def save(self, commit=True):

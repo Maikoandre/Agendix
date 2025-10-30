@@ -91,7 +91,7 @@ def create_users_professors(num_profs):
     return profs_aee_list
 
 def create_sessions_and_attendance(students_list, num_sessions=10):
-    """ Cria sessões e registra a presença de alunos aleatórios. """
+    """ Cria sessões e registra a presença de um único aluno por sessão. """
     print("Criando sessões...")
     for _ in range(num_sessions):
         session = Session.objects.create(
@@ -101,15 +101,14 @@ def create_sessions_and_attendance(students_list, num_sessions=10):
             notes=fake.paragraph(nb_sentences=2)
         )
 
-        # Seleciona 3 a 5 alunos aleatórios para esta sessão
-        if len(students_list) >= 5:
-            students_for_session = random.sample(students_list, k=random.randint(3, 5))
-            for student in students_for_session:
-                SessionAttendance.objects.create(
-                    session=session,
-                    student=student,
-                    present=random.choice([True, False, True]) # Mais chance de estar presente
-                )
+        # Seleciona apenas 1 aluno aleatório para esta sessão (se houver ao menos 1)
+        if students_list:
+            student = random.choice(students_list)
+            SessionAttendance.objects.create(
+                session=session,
+                student=student,
+                present=random.choice([True, False, True])  # Mais chance de estar presente
+            )
     
     # Create a session for today
     session = Session.objects.create(
@@ -118,14 +117,13 @@ def create_sessions_and_attendance(students_list, num_sessions=10):
         place=f"Sala de Recursos {random.randint(1, 5)}",
         notes="Sessão de hoje."
     )
-    if len(students_list) >= 5:
-        students_for_session = random.sample(students_list, k=random.randint(3, 5))
-        for student in students_for_session:
-            SessionAttendance.objects.create(
-                session=session,
-                student=student,
-                present=True
-            )
+    if students_list:
+        student = random.choice(students_list)
+        SessionAttendance.objects.create(
+            session=session,
+            student=student,
+            present=True
+        )
 
     print(f"{num_sessions + 1} sessões criadas.")
 

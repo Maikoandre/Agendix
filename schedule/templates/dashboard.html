@@ -124,44 +124,12 @@
             <canvas
               id="appointments-chart"
               class="chart-canvas"
-              height="150"
+              height="250"
+              style="height: 350px"
             ></canvas>
           </div>
         </div>
       </div>
-
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script>
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
-        const appointmentsCount = [12, 19, 14, 17, 22, 25, 20];
-
-        const ctx = document
-          .getElementById("appointments-chart")
-          .getContext("2d");
-        new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: months,
-            datasets: [
-              {
-                label: "Appointments",
-                data: appointmentsCount,
-                borderColor: "rgba(54, 162, 235, 1)",
-                backgroundColor: "rgba(54, 162, 235, 0.2)",
-                fill: true,
-                tension: 0.4,
-                pointRadius: 5,
-                pointBackgroundColor: "rgba(54, 162, 235, 1)",
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } },
-          },
-        });
-      </script>
     </div>
 
     <div class="col-lg-5">
@@ -279,9 +247,7 @@
                   </td>
 
                   <td>
-                    <p class="font-weight-normal mb-0">
-                      {{ session.place }}
-                    </p>
+                    <p class="font-weight-normal mb-0">{{ session.place }}</p>
                   </td>
 
                   <td class="align-middle text-center">
@@ -290,7 +256,7 @@
                         href="#"
                         class="btn btn-info btn-sm mb-0"
                         title="Detalhes"
-                      >
+                      >Detalhes
                         <i class="fa fa-eye"></i>
                       </a>
 
@@ -298,7 +264,7 @@
                         href="#"
                         class="btn btn-warning btn-sm mb-0"
                         title="Editar"
-                      >
+                      >Editar
                         <i class="fa fa-edit"></i>
                       </a>
 
@@ -309,7 +275,7 @@
                           class="btn btn-danger btn-sm mb-0"
                           title="Excluir"
                           onclick="return confirm('Deseja realmente excluir este atendimento?');"
-                        >
+                        >Excluir
                           <i class="fa fa-trash"></i>
                         </button>
                       </form>
@@ -333,5 +299,34 @@
     </div>
   </div>
 </div>
-{% endblock content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+  const appointmentsCount = [12, 19, 14, 17, 22, 25, 20];
 
+  const ctx = document.getElementById("appointments-chart").getContext("2d");
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: "Appointments",
+          data: appointmentsCount,
+          borderColor: "rgba(54, 162, 235, 1)",
+          backgroundColor: "rgba(54, 162, 235, 0.2)",
+          fill: true,
+          tension: 0.4,
+          pointRadius: 5,
+          pointBackgroundColor: "rgba(54, 162, 235, 1)",
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } },
+    },
+  });
+</script>
+{% endblock content %}

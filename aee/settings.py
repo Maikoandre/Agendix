@@ -131,6 +131,6 @@ PASSWORD_HASHERS = [
 ]
 
 AUTHENTICATION_BACKENDS =[
-    'store.authentication.CustomerAuthBackend',
+    'schedule.authentication.UserAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]

@@ -1,0 +1,135 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  
+  <title>Registrar Professor AEE</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: linear-gradient(180deg,#f8fafc, #eef2f6); }
+    .card-login { max-width: 420px; border-radius: 12px; box-shadow: 0 8px 30px rgba(22, 28, 37, 0.08); }
+    .form-control:focus { box-shadow: none; border-color: #6c7ae0; }
+    /* Estilo para erros do formulário */
+    .form-error { color: #dc3545; font-size: 0.875em; margin-top: 0.25rem; }
+  </style>
+</head>
+<body>
+  <main class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card card-login p-4">
+      <div class="card-body">
+        <div class="text-center mb-4">
+          {% comment %} <img src="{% static 'img/logo.png' %}" alt="Logo" width="72" height="72" class="mb-2"> {% endcomment %}
+          
+          <h5 class="card-title mb-0">Registrar Novo Professor AEE</h5>
+          <small class="text-muted d-block">Preencha os dados abaixo para criar a conta</small>
+        </div>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} py-2" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'professorAEE_register' %}">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="{{ form.name.id_for_label }}" class="form-label small">Nome Completo</label>
+            {{ form.name }}
+            <div class="form-error">{{ form.name.errors }}</div>
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}" class="form-label small">Email</label>
+            {{ form.email }}
+            <div class="form-error">{{ form.email.errors }}</div>
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.phone.id_for_label }}" class="form-label small">Numero de celular</label>
+            {{ form.phone }}
+            <div class="form-error">{{ form.phone.errors }}</div>
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.birth_date.id_for_label }}" class="form-label small">Data de Nascimento</label>
+            {{ form.birth_date }}
+            <div class="form-error">{{ form.birth_date.errors }}</div>
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.gender.id_for_label }}" class="form-label small">Gênero</label>
+            {{ form.gender }}
+            <div class="form-error">{{ form.gender.errors }}</div>
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.birth_place.id_for_label }}" class="form-label small">Local de Nascimento</label>
+            {{ form.birth_place }}
+            <div class="form-error">{{ form.birth_place.errors }}</div>
+          </div>
+
+          <hr class="my-3">
+
+          <div class="mb-3">
+            <label for="{{ form.siape.id_for_label }}" class="form-label small">SIAPE</label>
+            {{ form.siape }}
+            <div class="form-error">{{ form.siape.errors }}</div>
+          </div>
+           <div class="mb-3">
+            <label for="{{ form.speciality.id_for_label }}" class="form-label small">Especialidade</label>
+            {{ form.speciality }}
+            <div class="form-error">{{ form.speciality.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_password" class="form-label small">Senha</label>
+            <div class="input-group">
+              {{ form.password }}
+              <button type="button" class="btn btn-outline-secondary" id="togglePassword" title="Show password">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/><path d="M8 5.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z" fill="#fff"/></svg>
+              </button>
+            </div>
+            <div class="form-error">{{ form.password.errors }}</div>
+          </div>
+
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary">Registrar</button>
+          </div>
+        </form>
+
+        <p class="text-center small text-muted mt-3">
+          Já tem uma conta? <a href="{% url 'login' %}">Faça login</a>
+        </p>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (function(){
+      // Script original para mostrar/ocultar senha (Mantido)
+      // Ele funciona com 'id_password', que o Django cria para o campo 'password'
+      const pw = document.getElementById('id_password');
+      const btn = document.getElementById('togglePassword');
+      if (pw && btn) {
+        btn.addEventListener('click', () => {
+          const t = pw.type === 'password' ? 'text' : 'password';
+          pw.type = t;
+          btn.title = t === 'text' ? 'Hide password' : 'Show password';
+        });
+      }
+
+      // NOVO SCRIPT: Adiciona a classe 'form-control'
+      // a todos os inputs e selects dentro do formulário do card.
+      // Isso garante o estilo do Bootstrap mesmo sem widgets no forms.py.
+      document.querySelectorAll('.card-login form input, .card-login form select').forEach(function(el) {
+          if (el.type !== 'checkbox' && el.type !== 'radio') {
+              el.classList.add('form-control');
+          }
+      });
+    })();
+  </script>
+</body>
+</html>

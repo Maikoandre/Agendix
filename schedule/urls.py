@@ -11,6 +11,9 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('login', views.login, name='login'),
+    path('logout/', views.logout_view, name='logout'),
     path('register', views.register_users, name='register_users'),
-    path('delete_session/<int:session_id>', views.delete_session, name='delete_session')
+    path('delete_session/<int:session_id>', views.delete_session, name='delete_session'),
+    path("professoraee-register", views.professorAEE_register, name='professorAEE_register'),
+    path('login/professor/', views.professorAEE_login, name='professorAEE_login'),
 ]

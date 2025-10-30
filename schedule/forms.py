@@ -1,5 +1,5 @@
 from django import forms
-from .models import Session, User
+from .models import Session, User, ProfessorAEE
 
 allowed_times = [
     
@@ -63,3 +63,19 @@ class UserForm(forms.ModelForm):
         birth_place = forms.CharField(max_length=100)
         phone = forms.CharField(max_length=15)
         password =forms.CharField(max_length=128)
+
+class ProfessorAEERegistrationForm(forms.Form):
+    # Campos do Model 'User'
+    name = forms.CharField(max_length=150, label="Nome Completo")
+    email = forms.EmailField(label="Email")
+    birth_date = forms.DateField(label="Data de Nascimento", widget=forms.DateInput(attrs={'type': 'date'}))
+    gender = forms.CharField(max_length=10, label="Gênero")
+    birth_place = forms.CharField(max_length=100, label="Local de Nascimento")
+    phone = forms.CharField(max_length=15, label="Telefone")
+    password = forms.CharField(max_length=128, widget=forms.PasswordInput, label="Senha")
+
+    # Campo do Model 'Professor'
+    siape = forms.CharField(max_length=20, label="SIAPE")
+
+    # Campo do Model 'ProfessorAEE'
+    speciality = forms.CharField(max_length=100, label="Especialidade")

@@ -37,31 +37,31 @@ def login(request):
         password = request.POST.get('password')
         user = authenticate(request, username=name, password=password)
         if user is not None:
-            auth_login(request, user)
+            auth_login(request, user) # <--- CORRIGIDO
             return redirect('index')
         else:
             messages.error(request, 'Name or password invalid.')
-    
+
     return render(request, 'authentication/sign-in.html')
 
 def register_users(request):
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
-            User.objects.create(
+
+            # CORRIGIDO:
+            new_user = User(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
                 birth_date=form.cleaned_data['birth_date'],
                 gender=form.cleaned_data['gender'],
-                phone=form.cleaned_data['phone'],
-                password=form.cleaned_data['password']
-                
+                phone=form.cleaned_data['phone']
             )
+            # Encripta a palavra-passe antes de salvar
+            new_user.set_password(form.cleaned_data['password'])
+            new_user.save()
+
             return redirect('register_users')
-    else:
-        form = UserForm()
-        
-    return render(request, 'authentication/sign-up.html', {'form': form})
 
 
 def logout_view(request):

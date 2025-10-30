@@ -65,7 +65,6 @@ class UserForm(forms.ModelForm):
         password =forms.CharField(max_length=128)
 
 class ProfessorAEERegistrationForm(forms.Form):
-    # Campos do Model 'User'
     name = forms.CharField(max_length=150, label="Nome Completo")
     email = forms.EmailField(label="Email")
     birth_date = forms.DateField(label="Data de Nascimento", widget=forms.DateInput(attrs={'type': 'date'}))

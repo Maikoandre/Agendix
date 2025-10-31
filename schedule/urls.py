@@ -12,6 +12,6 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('register', views.register_users, name='register_users'),
     path('delete_session/<int:session_id>', views.delete_session, name='delete_session'),
-    path("register/professoraee", views.professorAEE_register, name='professorAEE_register'),
-    path('login/professor/', views.professorAEE_login, name='professorAEE_login'),
+    path("register/professoraee", views.register_professor_aee, name='register_professor_aee'),
+    path('login/professor/', views.login_professor_aee, name='login_professor_aee'),
 ]

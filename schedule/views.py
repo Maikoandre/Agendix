@@ -115,9 +115,16 @@ def login_professor_aee(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect('index')
+            next_url = request.POST.get('next') or request.GET.get('next') or 'index'
+            return redirect(next_url)
         else:
-            messages.error(request, 'Email or password invalid.')
+            error_message = 'Email or password invalid.'
 
-    return render(request, 'authentication/login_professor_aee.html')
-    return render(request, 'authentication/sign-up.html', {'form': form})
+    return render(request, 'authentication/login_professor_aee.html', {'error': error_message})
+
+def logout_view(request):
+    if request.method == "POST":
+        logout(request)
+        redirect('login_professor_aee')
+    else:
+        redirect('index')

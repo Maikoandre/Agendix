@@ -179,7 +179,7 @@ def create_proposals_reviews_reports_plans(students_list, profs_aee_list):
 # --- Execução Principal ---
 if __name__ == '__main__':
     # Limpa o DB antes de popular
-    clean_database()
+    #clean_database()
     
     # Define quantos de cada você quer criar
     NUM_ESTUDANTES = 25

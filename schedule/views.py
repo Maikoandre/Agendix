@@ -81,28 +81,32 @@ def register_professor_aee(request):
     if request.method == 'POST':
         form = ProfessorAEERegistrationForm(request.POST)
         if form.is_valid():
-            user_form = UserForm({
-                'name': form.cleaned_data['name'],
-                'email': form.cleaned_data['email'],
-                'birth_date': form.cleaned_data['birth_date'],
-                'gender': form.cleaned_data['gender'],
-                'phone': form.cleaned_data['phone'],
-                'password': form.cleaned_data['password']
-            })
-            if user_form.is_valid():
-                user = user_form.save()                
-                ProfessorAEE.objects.create(
-                    user=user,
-                    specialty=form.cleaned_data['specialty']
-                )
-                messages.success(request, 'Professor AEE registered successfully!')
-                return redirect('index')
-            else:
-                form.add_error(None, 'There was an error registering the user.')
-    else:
-        form = ProfessorAEERegistrationForm()
-    
-    return render(request, 'register_professor_aee.html', {'form': form})
+            name = form.cleaned_data.get('name')
+            email = form.cleaned_data.get('email')
+            birth_date = form.cleaned_data.get('birth_date')
+            gender = form.cleaned_data.get('gender')
+            birth_place = form.cleaned_data.get('birth_place')
+            phone = form.cleaned_data.get('phone')
+            password = form.cleaned_data.get('password')
+            siape = form.cleaned_data.get('siape')
+            speciality = form.cleaned_data.get('speciality')
+
+            user = User.objects.create_user(
+                username=name, 
+                password=password,
+                email=email,
+                birth_date=birth_date,
+                gender=gender,
+                phone=phone,
+                birth_place=birth_place,
+                siape=siape,
+                speciality=speciality
+            )
+            auth_login(request, user)
+            return redirect('index')
+        else:
+            form = ProfessorAEERegistrationForm()
+            return render(request, 'authentication/professoraee-sign-in.html', {'form': form})
 
 def login_professor_aee(request):
     if request.method == 'POST':

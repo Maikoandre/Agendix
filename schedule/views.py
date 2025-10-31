@@ -1,14 +1,21 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from .models import Session, User, ProfessorAEE, Professor, Student
-from .forms import SessionForm, UserForm, ProfessorAEERegistrationForm
-from django.contrib.auth import authenticate, login as auth_login, logout
+# Bibliotecas Padrão (Standard Library)
+from datetime import date, datetime
+
+# Bibliotecas de Terceiros (Third-Party / Django)
 from django.contrib import messages
+from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
-from datetime import datetime, date
 from django.contrib.auth.hashers import make_password
 from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 
-#@login_required(login_url='login')
+# Importações Locais (Local App)
+from .forms import ProfessorAEERegistrationForm, SessionForm, UserForm
+from .models import Professor, ProfessorAEE, Session, Student, User
+
+@login_required(login_url='login')
 def index(request):
     if request.method == "POST":
         form = SessionForm(request.POST)
@@ -70,63 +77,43 @@ def delete_session(request, session_id):
     session.delete()
     return redirect('index')
 
-@transaction.atomic 
-def professorAEE_register(request):
-    if request.method == "POST":
+def register_professor_aee(request):
+    if request.method == 'POST':
         form = ProfessorAEERegistrationForm(request.POST)
         if form.is_valid():
-            try:
-                new_user = User(
-                    name=form.cleaned_data['name'],
-                    email=form.cleaned_data['email'],
-                    birth_date=form.cleaned_data['birth_date'],
-                    gender=form.cleaned_data['gender'],
-                    birth_place=form.cleaned_data['birth_place'],
-                    phone=form.cleaned_data['phone']
-                )
-                new_user.set_password(form.cleaned_data['password'])
-                new_user.save()
-
-                new_professor = Professor.objects.create(
-                    user=new_user,
-                    siape=form.cleaned_data['siape']
-                )
-
+            user_form = UserForm({
+                'name': form.cleaned_data['name'],
+                'email': form.cleaned_data['email'],
+                'birth_date': form.cleaned_data['birth_date'],
+                'gender': form.cleaned_data['gender'],
+                'phone': form.cleaned_data['phone'],
+                'password': form.cleaned_data['password']
+            })
+            if user_form.is_valid():
+                user = user_form.save()                
                 ProfessorAEE.objects.create(
-                    professor=new_professor,
-                    speciality=form.cleaned_data['speciality']
+                    user=user,
+                    specialty=form.cleaned_data['specialty']
                 )
-
-                return redirect('professorAEE_register')
-
-            except Exception as e:
-                messages.error(request, f'Erro ao registrar: {e}')
-    
+                messages.success(request, 'Professor AEE registered successfully!')
+                return redirect('index')
+            else:
+                form.add_error(None, 'There was an error registering the user.')
     else:
         form = ProfessorAEERegistrationForm()
-
-    return render(request, 'authentication/professoraee-sign-up.html', {'form': form})
-
-def professorAEE_login(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        password = request.POST.get('password')
-        
-        user = authenticate(request, username=name, password=password)
-        
-        if user is not None:
-            try:
-                is_professor_aee = ProfessorAEE.objects.filter(professor__user=user).exists()
-                
-                if is_professor_aee:
-                    login(request, user)
-                    return redirect('index')
-                else:
-                    messages.error(request, 'Este usuário não é um Professor AEE.')
-                    
-            except Professor.DoesNotExist:
-                messages.error(request, 'Este usuário não é um Professor AEE.')
-        else:
-            messages.error(request, 'Nome ou senha inválida.')
     
-    return render(request, 'authentication/sign-in.html')
+    return render(request, 'register_professor_aee.html', {'form': form})
+
+def login_professor_aee(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            auth_login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Email or password invalid.')
+
+    return render(request, 'authentication/login_professor_aee.html')
+    return render(request, 'authentication/sign-up.html', {'form': form})

@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import Session, User, ProfessorAEE
 
 allowed_times = [
@@ -64,7 +65,7 @@ class UserForm(forms.ModelForm):
         phone = forms.CharField(max_length=15)
         password =forms.CharField(max_length=128)
 
-class ProfessorAEERegistrationForm(forms.Form):
+class ProfessorAEERegistrationForm(forms.ModelForm):
     name = forms.CharField(max_length=150, label="Nome Completo")
     email = forms.EmailField(label="Email")
     birth_date = forms.DateField(label="Data de Nascimento", widget=forms.DateInput(attrs={'type': 'date'}))
@@ -72,9 +73,21 @@ class ProfessorAEERegistrationForm(forms.Form):
     birth_place = forms.CharField(max_length=100, label="Local de Nascimento")
     phone = forms.CharField(max_length=15, label="Telefone")
     password = forms.CharField(max_length=128, widget=forms.PasswordInput, label="Senha")
-
-    # Campo do Model 'Professor'
+    password_confirm = forms.CharField(max_length=128, widget=forms.PasswordInput, label="Confirmar Senha")
     siape = forms.CharField(max_length=20, label="SIAPE")
-
-    # Campo do Model 'ProfessorAEE'
     speciality = forms.CharField(max_length=100, label="Especialidade")
+
+    class Meta():
+        model = User
+        fields = ['name', 'birth_date', 'email', 'gender', 'birth_place', 'phone', 'password', 'password_confirm', 'siape', 'speciality']
+    
+    def clean(self):
+        cleaned_data = super.clean()
+        passoword = cleaned_data.get('password')
+        password_confirm = cleaned_data.get('password_confirm')
+
+        if passoword and password_confirm and passoword != password_confirm:
+            raise forms.ValidationError("As senhas não coincidem.")
+        
+        return cleaned_data
+

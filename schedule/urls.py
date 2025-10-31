@@ -1,8 +1,6 @@
 try:
     from django.urls import path
 except Exception:
-    # Fallback for environments where Django isn't installed or the editor can't resolve django.
-    # This minimal shim allows the module to be imported (useful for linters or editors).
     def path(route, view, kwargs=None, name=None):
         return (route, view, kwargs, name)
 

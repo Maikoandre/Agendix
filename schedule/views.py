@@ -61,12 +61,6 @@ def index(request):
     
     chart_months = [entry['month'].strftime('%b') for entry in sessions_per_month]
     chart_counts = [entry['count'] for entry in sessions_per_month]
-
-    # --- DEBUG: Adicione estas linhas temporariamente ---
-    print(f"--- DEBUG DATA ---")
-    print(f"Data de Hoje no Servidor: {now}")
-    print(f"Agendamentos encontrados para hoje: {Session.objects.filter(date=now).count()}")
-    print(f"------------------")
     
     # --- CONTEXTO ---
     context = {

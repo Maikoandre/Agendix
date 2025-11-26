@@ -131,4 +131,4 @@ def logout_view(request):
 
 def profile_view(request, pk):
     students = get_object_or_404(Student, pk=pk)
-    return render(request, 'students/profile.html', {'students': students})
+    return render(request, 'students/profile.html', {'student': students})

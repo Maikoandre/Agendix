@@ -29,7 +29,9 @@ def create_users_students(num_students):
     print(f"Criando {num_students} estudantes...")
     for _ in range(num_students):
         try:
+            user_name = fake.user_name()
             user = User(
+                username=user_name,
                 name=fake.name(),
                 birth_date=fake.date_of_birth(minimum_age=18, maximum_age=30),
                 email=fake.unique.email(),
@@ -56,7 +58,9 @@ def create_users_professors(num_profs):
     print(f"Criando {num_profs} professores...")
     for _ in range(num_profs):
         try:
+            user_name = fake.user_name()
             user = User(
+                username=user_name,
                 name=fake.name(),
                 birth_date=fake.date_of_birth(minimum_age=30, maximum_age=65),
                 email=fake.unique.email(),

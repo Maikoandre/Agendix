@@ -14,5 +14,5 @@ urlpatterns = [
     path('delete_session/<int:session_id>', views.delete_session, name='delete_session'),
     path("register/professoraee", views.register_professor_aee, name='register_professor_aee'),
     path('login/professor/', views.login_professor_aee, name='login_professor_aee'),
-    path('student/profile/<int:pk>/details/', views.profile_view, name='student_detail'),
+    path('student/profile/<int:pk>/details/', views.profile_view, name='profile_view'),
 ]

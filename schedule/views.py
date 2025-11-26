@@ -14,6 +14,7 @@ from django.db.models import Count
 from django.db.models.functions import TruncMonth
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.utils import timezone
 
 # Importações Locais (Local App)
 from .forms import ProfessorAEERegistrationForm, SessionForm, UserForm
@@ -29,6 +30,8 @@ def index(request):
             return redirect('index')
     else:
         form = SessionForm()
+    
+    now = timezone.localdate()
     
     # --- LÓGICA DE FILTRO E PESQUISA ---
     search_query = request.GET.get('q', '') # Pega o termo da busca da URL (?q=nome)
@@ -59,8 +62,13 @@ def index(request):
     chart_months = [entry['month'].strftime('%b') for entry in sessions_per_month]
     chart_counts = [entry['count'] for entry in sessions_per_month]
 
+    # --- DEBUG: Adicione estas linhas temporariamente ---
+    print(f"--- DEBUG DATA ---")
+    print(f"Data de Hoje no Servidor: {now}")
+    print(f"Agendamentos encontrados para hoje: {Session.objects.filter(date=now).count()}")
+    print(f"------------------")
+    
     # --- CONTEXTO ---
-    now = datetime.now().date()
     context = {
         'sessions': page_obj, # Agora passamos o objeto paginado, não a lista toda!
         'students': Student.objects.count(),
@@ -115,32 +123,48 @@ def register_professor_aee(request):
     if request.method == 'POST':
         form = ProfessorAEERegistrationForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data.get('name')
-            email = form.cleaned_data.get('email')
-            birth_date = form.cleaned_data.get('birth_date')
-            gender = form.cleaned_data.get('gender')
-            birth_place = form.cleaned_data.get('birth_place')
-            phone = form.cleaned_data.get('phone')
-            password = form.cleaned_data.get('password')
-            siape = form.cleaned_data.get('siape')
-            speciality = form.cleaned_data.get('speciality')
+            # Extrair dados limpos
+            data = form.cleaned_data
+            
+            # 1. Criar o Usuário Base
+            # Nota: create_user lida com o hash da senha automaticamente
+            try:
+                with transaction.atomic(): # Garante que ou cria tudo ou não cria nada
+                    user = User.objects.create(
+                        name=data['name'],
+                        email=data['email'],
+                        birth_date=data['birth_date'],
+                        gender=data['gender'],
+                        birth_place=data['birth_place'],
+                        phone=data['phone']
+                    )
+                    user.set_password(data['password'])
+                    user.save()
 
-            user = User.objects.create_user(
-                username=name, 
-                password=password,
-                email=email,
-                birth_date=birth_date,
-                gender=gender,
-                phone=phone,
-                birth_place=birth_place,
-                siape=siape,
-                speciality=speciality
-            )
-            auth_login(request, user)
-            return redirect('index')
-        else:
-            form = ProfessorAEERegistrationForm()
-            return render(request, 'authentication/professoraee-sign-in.html', {'form': form})
+                    # 2. Criar o Professor vinculado ao Usuário
+                    professor = Professor.objects.create(
+                        user=user,
+                        siape=data['siape']
+                    )
+
+                    # 3. Criar o Professor AEE vinculado ao Professor
+                    ProfessorAEE.objects.create(
+                        professor=professor,
+                        speciality=data['speciality']
+                    )
+
+                    # Logar o usuário imediatamente
+                    auth_login(request, user)
+                    return redirect('index')
+
+            except Exception as e:
+                # Se der erro (ex: email duplicado), mostra mensagem
+                messages.error(request, f"Erro ao cadastrar: {e}")
+                
+    else:
+        form = ProfessorAEERegistrationForm()
+    
+    return render(request, 'authentication/professoraee-sign-in.html', {'form': form})
 
 def login_professor_aee(request):
     if request.method == 'POST':
@@ -156,13 +180,7 @@ def login_professor_aee(request):
 
     return render(request, 'authentication/login_professor_aee.html', {'error': error_message})
 
-def logout_view(request):
-    if request.method == "POST":
-        logout(request)
-        redirect('login_professor_aee')
-    else:
-        redirect('index')
 
 def profile_view(request, pk):
-    students = get_object_or_404(Student, pk=pk)
-    return render(request, 'students/profile.html', {'student': students})
+    student_obj = get_object_or_404(Student, pk=pk)
+    return render(request, 'students/profile.html', {'student': student_obj})

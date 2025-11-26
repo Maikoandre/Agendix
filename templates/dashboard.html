@@ -123,7 +123,7 @@
         </div>
       </div>
 
-      <div class="col-12 mt-4">
+      <div class="card-body px-0 pt-0 pb-2" id="table-results">
         <div class="card h-100 shadow-sm border-0">
           <div
             class="card-header pb-0 pt-3 bg-transparent border-bottom-0 d-flex justify-content-between align-items-center"
@@ -135,7 +135,7 @@
               </p>
             </div>
 
-            <form method="get" class="d-flex ms-auto">
+            <form method="get" class="d-flex ms-auto" id="search-form">
               <div class="input-group input-group-sm">
                 <span class="input-group-text text-body"
                   ><i class="fas fa-search" aria-hidden="true"></i
@@ -277,6 +277,7 @@
                         {% endif %}
 
                         {% for i in context.sessions.paginator.page_range %}
+                            
                             {% if i == context.sessions.paginator.page_range.start or i == context.sessions.paginator.page_range.stop|add:"-1" or i >= context.sessions.number|add:"-2" and i <= context.sessions.number|add:"2" %}
                                 
                                 {% if context.sessions.number == i %}
@@ -292,7 +293,8 @@
                                 {% endif %}
 
                             {% endif %}
-                        {% endfor %}
+                            {% endfor %}
+
                         {% if context.sessions.has_next %}
                             <li class="page-item">
                                 <a class="page-link" href="?page={{ context.sessions.next_page_number }}{% if context.search_query %}&q={{ context.search_query }}{% endif %}" aria-label="Next">
@@ -314,12 +316,11 @@
       </div>
     </div>
   </div>
-  
-  {{ context.chart_months|json_script:"months-data" }}
+
+  {{ context.chart_months|json_script:"months-data" }} 
   {{ context.chart_counts|json_script:"counts-data" }}
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-
     document.addEventListener("DOMContentLoaded", function () {
       const chartElement = document.getElementById("appointments-chart");
 
@@ -363,6 +364,81 @@
           },
         });
       }
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Função para atualizar a tabela via AJAX
+      function updateTable(url) {
+        // Mostra uma opacidade para indicar carregamento (opcional)
+        const container = document.getElementById("table-results");
+        container.style.opacity = "0.5";
+
+        fetch(url)
+          .then((response) => response.text())
+          .then((html) => {
+            // Converte o texto recebido em HTML real
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+
+            // Pega apenas o novo conteúdo da tabela e substitui o atual
+            const newContent = doc.getElementById("table-results").innerHTML;
+            container.innerHTML = newContent;
+
+            // Remove a opacidade
+            container.style.opacity = "1";
+          })
+          .catch((error) => console.error("Erro ao atualizar tabela:", error));
+      }
+
+      // 1. Interceptar o envio do formulário de busca
+      const searchForm = document.getElementById("search-form");
+      if (searchForm) {
+        searchForm.addEventListener("submit", function (e) {
+          e.preventDefault(); // Impede o reload
+          const formData = new FormData(searchForm);
+          const params = new URLSearchParams(formData);
+          const url = `${window.location.pathname}?${params.toString()}`;
+
+          // Atualiza a URL do navegador sem recarregar (para poder compartilhar o link)
+          window.history.pushState({}, "", url);
+
+          updateTable(url);
+        });
+      }
+
+      // 2. Interceptar cliques na paginação (Delegação de Eventos)
+      // Usamos delegação porque os botões de paginação são substituídos dinamicamente
+      document
+        .getElementById("table-results")
+        .addEventListener("click", function (e) {
+          // Verifica se o clique foi em um link de paginação (tag <a> ou ícone dentro de <a>)
+          const link = e.target.closest(".page-link");
+
+          if (
+            link &&
+            link.getAttribute("href") &&
+            link.getAttribute("href") !== "#"
+          ) {
+            e.preventDefault(); // Impede o reload
+            const url = link.getAttribute("href");
+
+            // Atualiza a URL do navegador
+            window.history.pushState({}, "", url);
+
+            updateTable(url);
+          }
+        });
+
+      // 3. Opcional: Busca dinâmica enquanto digita (Live Search)
+      const searchInput = searchForm.querySelector("input[name='q']");
+      let timeout = null;
+      searchInput.addEventListener("input", function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          searchForm.dispatchEvent(new Event("submit"));
+        }, 500); // Aguarda meio segundo após parar de digitar
+      });
     });
   </script>
   {% endblock content %}

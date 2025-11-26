@@ -15,12 +15,52 @@ from django.db.models.functions import TruncMonth
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 
 # Importações Locais (Local App)
 from .forms import ProfessorAEERegistrationForm, SessionForm, UserForm
 from .models import Professor, ProfessorAEE, Session, Student, User
 
-#@login_required(login_url='login')
+User = get_user_model()
+
+def login_view(request):
+    if request.method == 'POST':
+        # O Django usa 'username' por padrão. Se seu form usa 'name', mapeie aqui.
+        username = request.POST.get('username') # Garanta que o input no HTML tenha name="username"
+        password = request.POST.get('password')
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            auth_login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Usuário ou senha inválidos.')
+
+    return render(request, 'authentication/sign-in.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+def register_users(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            # Use create_user para garantir que a senha seja criptografada
+            User.objects.create_user(
+                username=form.cleaned_data['name'], # Usando nome como username
+                name=form.cleaned_data['name'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password'],
+                birth_date=form.cleaned_data['birth_date'],
+                gender=form.cleaned_data['gender'],
+                phone=form.cleaned_data['phone']
+            )
+            return redirect('login')
+    # ... renderize o template de registro ...
+
+@login_required
 def index(request):
     # Lógica do Formulário (POST) - Mantém igual
     if request.method == "POST":
@@ -74,41 +114,7 @@ def index(request):
     
     return render(request, 'dashboard.html', {'form': form, 'context': context})
 
-def login(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        password = request.POST.get('password')
-        user = authenticate(request, username=name, password=password)
-        if user is not None:
-            auth_login(request, user)
-            return redirect('index')
-        else:
-            messages.error(request, 'Name or password invalid.')
-
-    return render(request, 'authentication/sign-in.html')
-
-def register_users(request):
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            new_user = User(
-                name=form.cleaned_data['name'],
-                email=form.cleaned_data['email'],
-                birth_date=form.cleaned_data['birth_date'],
-                gender=form.cleaned_data['gender'],
-                phone=form.cleaned_data['phone']
-            )
-            new_user.set_password(form.cleaned_data['password'])
-            new_user.save()
-
-            return redirect('register_users')
-
-
-def logout_view(request):
-    logout(request)
-    return redirect('login')
-
-def delete_session(request, session_id):
+def delete_session(session_id):
     session = get_object_or_404(Session, id=session_id)
     session.delete()
     return redirect('index')
@@ -174,7 +180,7 @@ def login_professor_aee(request):
 
     return render(request, 'authentication/login_professor_aee.html', {'error': error_message})
 
-
+@login_required
 def profile_view(request, pk):
     student_obj = get_object_or_404(Student, pk=pk)
     return render(request, 'students/profile.html', {'student': student_obj})

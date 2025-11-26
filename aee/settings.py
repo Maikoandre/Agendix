@@ -135,3 +135,8 @@ AUTHENTICATION_BACKENDS =[
     'schedule.authentication.UserAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+AUTH_USER_MODEL = 'schedule.User'
+LOGIN_URL = 'login' 
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'login'

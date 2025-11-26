@@ -1,23 +1,32 @@
 from django.db import models
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import AbstractUser, Group, Permission
 
-class User(models.Model):
-    name = models.CharField(max_length=150, unique=True)
-    birth_date = models.DateField()
-    email = models.EmailField(unique=True)
-    gender = models.CharField(max_length=10)
-    birth_place = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15)
-    password = models.CharField(max_length=128)
+class User(AbstractUser):
+    name = models.CharField(max_length=150)
+    birth_date = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=10, null=True, blank=True)
+    birth_place = models.CharField(max_length=100, null=True, blank=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
 
-    def set_password(self, password):
-        self.password = make_password(password)
-
-    def check_password(self, password):
-        return check_password(password, self.password)
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name='groups',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        related_name="schedule_user_groups",  # Nome único
+        related_query_name="user",
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name='user permissions',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        related_name="schedule_user_permissions", # Nome único
+        related_query_name="user",
+    )
 
     def __str__(self):
-        return self.name
+        return self.username
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

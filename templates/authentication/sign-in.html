@@ -1,89 +1,112 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Sign in</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sign in</title>
 
-  <!-- Bootstrap 5 CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body { background: linear-gradient(180deg,#f8fafc, #eef2f6); }
-    .card-login { max-width: 420px; border-radius: 12px; box-shadow: 0 8px 30px rgba(22, 28, 37, 0.08); }
-    .form-control:focus { box-shadow: none; border-color: #6c7ae0; }
-  </style>
-</head>
-<body>
-  <main class="d-flex align-items-center justify-content-center min-vh-100">
-    <div class="card card-login p-4">
-      <div class="card-body">
-        <div class="text-center mb-4">
-          <!-- Replace with your logo -->
-          {% comment %} <img src="{% static 'img/logo.png' %}" alt="Logo" width="72" height="72" class="mb-2"> {% endcomment %}
-          <h5 class="card-title mb-0">Sign in to your account</h5>
-          <small class="text-muted d-block">Enter your credentials to continue</small>
-        </div>
-
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags|default:'info' }} py-2" role="alert">
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
-
-        <form method="post" action="{% url 'login' %}">
-          {% csrf_token %}
-
-          <div class="mb-3">
-            <label for="id_username" class="form-label small">Name</label>
-            <input type="text" name="username" id="id_username" class="form-control" required autofocus placeholder="you@example.com">
+    <!-- Bootstrap 5 CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(180deg, #f8fafc, #eef2f6);
+      }
+      .card-login {
+        max-width: 420px;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(22, 28, 37, 0.08);
+      }
+      .form-control:focus {
+        box-shadow: none;
+        border-color: #6c7ae0;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="d-flex align-items-center justify-content-center min-vh-100">
+      <div class="card card-login p-4">
+        <div class="card-body">
+          <div class="text-center mb-4">
+            <!-- Replace with your logo -->
+            {% comment %}
+            <img
+              src="{% static 'img/logo.png' %}"
+              alt="Logo"
+              width="72"
+              height="72"
+              class="mb-2"
+            />
+            {% endcomment %}
+            <h5 class="card-title mb-0">Sign in to your account</h5>
+            <small class="text-muted d-block"
+              >Enter your credentials to continue</small
+            >
           </div>
 
-          <div class="mb-3">
-            <label for="id_password" class="form-label small">Password</label>
-            <div class="input-group">
-              <input type="password" name="password" id="id_password" class="form-control" required placeholder="••••••••">
-              <button type="button" class="btn btn-outline-secondary" id="togglePassword" title="Show password">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/><path d="M8 5.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z" fill="#fff"/></svg>
+          {% if messages %} {% for message in messages %}
+          <div
+            class="alert alert-{{ message.tags|default:'info' }} py-2"
+            role="alert"
+          >
+            {{ message }}
+          </div>
+          {% endfor %} {% endif %}
+
+          <form role="form" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <input
+                type="text"
+                name="username"
+                class="form-control"
+                placeholder="Nome de Usuário"
+                aria-label="Name"
+              />
+            </div>
+            <div class="mb-3">
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                placeholder="Senha"
+                aria-label="Password"
+              />
+            </div>
+            <div class="text-center">
+              <button
+                type="submit"
+                class="btn bg-gradient-info w-100 mt-4 mb-0"
+              >
+                Entrar
               </button>
             </div>
-          </div>
+          </form>
 
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="1" id="id_remember" name="remember">
-              <label class="form-check-label small" for="id_remember">Remember me</label>
-            </div>
-            <a href="#" class="small">Forgot password?</a>
+          <div class="text-center mt-3 small text-muted">
+            Don't have an account?
+            <a href="{% url 'register_users' %}">Sign up</a>
           </div>
-
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Sign in</button>
-          </div>
-        </form>
-
-        <div class="text-center mt-3 small text-muted">
-          Don't have an account? <a href="{% url 'register_users' %}">Sign up</a>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Toggle password visibility
-    (function(){
-      const pw = document.getElementById('id_password');
-      const btn = document.getElementById('togglePassword');
-      if (!pw || !btn) return;
-      btn.addEventListener('click', () => {
-        const t = pw.type === 'password' ? 'text' : 'password';
-        pw.type = t;
-        btn.title = t === 'text' ? 'Hide password' : 'Show password';
-      });
-    })();
-  </script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Toggle password visibility
+      (function () {
+        const pw = document.getElementById("id_password");
+        const btn = document.getElementById("togglePassword");
+        if (!pw || !btn) return;
+        btn.addEventListener("click", () => {
+          const t = pw.type === "password" ? "text" : "password";
+          pw.type = t;
+          btn.title = t === "text" ? "Hide password" : "Show password";
+        });
+      })();
+    </script>
+  </body>
 </html>

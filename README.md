@@ -1,32 +1,27 @@
 # Agendix
 
-Agendix é um sistema de gestão para Atendimento Educacional Especializado (AEE), desenvolvido para facilitar o acompanhamento de alunos, agendamento de sessões e elaboração de planos pedagógicos.
+Agendix é um sistema de gestão para Atendimento Educacional Especializado (AEE), desenvolvido para facilitar o acompanhamento de alunos e agendamento de sessões.
 
 ## 📋 Sobre o Projeto
 
-O sistema visa auxiliar profissionais da educação na administração de atividades de AEE, fornecendo ferramentas para o cadastro de alunos e professores, controle de frequência em sessões, e geração de relatórios detalhados sobre o desenvolvimento dos estudantes.
+O sistema visa auxiliar profissionais da educação na administração de atividades de AEE, fornecendo ferramentas para o cadastro de alunos e professores e controle de frequência em sessões.
 
 ## ✨ Funcionalidades Principais
 
 - **Gestão de Usuários**:
   - Cadastro de Alunos com informações de matrícula e curso.
-  - Cadastro de Professores e Professores AEE (com especialidades).
 - **Agendamento e Sessões**:
   - Registro de sessões de atendimento (data, hora, local, observações).
   - Controle de presença (frequência) dos alunos.
-- **Documentação Pedagógica**:
-  - **Relatórios**: Geração de relatórios de acompanhamento com avaliações de desempenho.
-  - **Planos de Ensino (PEI)**: Elaboração de Planos de Ensino Individualizados e Propostas Pedagógicas.
-  - **Avaliações**: Registro de revisões de desempenho em áreas cognitivas, sociais, etc.
 - **Dashboard**: Visualização de dados e métricas de atendimentos.
 
 ## 🚀 Tecnologias Utilizadas
 
-- **Python** 3.x
-- **Django** (Framework Web)
-- **SQLite** (Banco de dados padrão)
-- **HTML5 / CSS3** (Frontend)
-- **Faker** (Para geração de dados de teste)
+- **Python**
+- **Django** 
+- **SQLite** 
+- **HTML5 / CSS3** 
+- **Faker** 
 
 ## 📦 Como Executar o Projeto
 
@@ -39,8 +34,8 @@ Certifique-se de ter o **Python** instalado em sua máquina. O gerenciamento de 
 1.  **Clone o repositório**:
 
     ```bash
-    git clone https://github.com/seu-usuario/agendix.git
-    cd agendix
+    git clone https://github.com/Maikoandre/Agendix.git
+    cd Agendix
     ```
 
 2.  **Configure o ambiente virtual**:
@@ -56,8 +51,6 @@ Certifique-se de ter o **Python** instalado em sua máquina. O gerenciamento de 
 
     ```bash
     pip install django faker
-    # Ou se houver um arquivo de requisitos:
-    # pip install -r requirements.txt
     ```
 
 4.  **Configure o Banco de Dados**:
@@ -88,7 +81,7 @@ Certifique-se de ter o **Python** instalado em sua máquina. O gerenciamento de 
 
 - `aee/`: Configurações principais do projeto Django (settings, urls).
 - `schedule/`: Aplicação principal (Models, Views, Forms).
-  - `models.py`: Definição das entidades (User, Student, Session, Report, etc.).
+  - `models.py`: Definição das entidades (User, Student, Session, etc.).
 - `templates/`: Arquivos HTML do frontend.
 - `static/`: Arquivos estáticos (CSS, JS, imagens).
 - `data_seed.py`: Script para popular o banco de dados.

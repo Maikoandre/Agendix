@@ -8,9 +8,11 @@ User = get_user_model()
 class StudentListTest(TestCase):
     def setUp(self):
         self.client = Client()
+        self.admin_user = User.objects.create_user(username='admin', password='password', name='Admin User')
+        self.client.login(username='admin', password='password')
+        
         self.user = User.objects.create_user(username='testuser', password='password', name='Test User')
         self.student = Student.objects.create(user=self.user, enrollment_number='12345')
-        self.client.login(username='testuser', password='password')
 
     def test_student_list_view(self):
         response = self.client.get(reverse('student_list'))
@@ -18,3 +20,9 @@ class StudentListTest(TestCase):
         self.assertTemplateUsed(response, 'students/student_list.html')
         self.assertContains(response, 'Test User')
         self.assertContains(response, '12345')
+
+    def test_delete_student(self):
+        response = self.client.post(reverse('delete_student', args=[self.student.id]))
+        self.assertRedirects(response, reverse('student_list'))
+        self.assertFalse(Student.objects.filter(id=self.student.id).exists())
+        self.assertFalse(User.objects.filter(id=self.user.id).exists())

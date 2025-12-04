@@ -3,11 +3,25 @@
   <div class="row">
     <div class="col-12">
       <div class="card mb-4 shadow-lg">
-        <div class="card-header pb-0 pt-3 bg-transparent">
-          <h6 class="text-capitalize mb-0">Perfil do Aluno</h6>
-          <p class="text-sm text-muted mb-0">
-            Informações detalhadas e histórico de agendamentos.
-          </p>
+        <div
+          class="card-header pb-0 pt-3 bg-transparent d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <h6 class="text-capitalize mb-0">Perfil do Aluno</h6>
+            <p class="text-sm text-muted mb-0">
+              Informações detalhadas e histórico de agendamentos.
+            </p>
+          </div>
+          <form
+            action="{% url 'delete_student' student.id %}"
+            method="post"
+            onsubmit="return confirm('Tem certeza que deseja excluir este aluno?');"
+          >
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm mb-0">
+              <i class="fa fa-trash me-2"></i> Excluir Aluno
+            </button>
+          </form>
         </div>
         <div class="card-body">
           <div class="row">

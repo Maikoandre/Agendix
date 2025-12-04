@@ -100,6 +100,22 @@
                     >
                       <i class="fa fa-eye"></i>
                     </a>
+                    <form
+                      action="{% url 'delete_student' student.id %}"
+                      method="post"
+                      class="d-inline"
+                      onsubmit="return confirm('Tem certeza que deseja excluir este aluno?');"
+                    >
+                      {% csrf_token %}
+                      <button
+                        type="submit"
+                        class="btn btn-danger btn-sm mb-0"
+                        data-toggle="tooltip"
+                        data-original-title="Excluir"
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </form>
                   </td>
                 </tr>
                 {% empty %}

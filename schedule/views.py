@@ -209,3 +209,14 @@ def student_list(request):
     }
     
     return render(request, 'students/student_list.html', context)
+
+@login_required
+def delete_student(request, pk):
+    student = get_object_or_404(Student, pk=pk)
+    if request.method == 'POST':
+        user = student.user
+        student.delete()
+        user.delete()
+        messages.success(request, 'Aluno excluído com sucesso.')
+        return redirect('student_list')
+    return redirect('student_list')

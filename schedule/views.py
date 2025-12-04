@@ -184,3 +184,28 @@ def login_professor_aee(request):
 def profile_view(request, pk):
     student_obj = get_object_or_404(Student, pk=pk)
     return render(request, 'students/profile.html', {'student': student_obj})
+
+@login_required
+def student_list(request):
+    search_query = request.GET.get('q', '')
+    
+    students = Student.objects.all().order_by('user__name')
+    
+    if search_query:
+        students = students.filter(
+            Q(user__name__icontains=search_query) |
+            Q(enrollment_number__icontains=search_query) |
+            Q(course__icontains=search_query)
+        ).distinct()
+        
+    paginator = Paginator(students, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'students': page_obj,
+        'search_query': search_query,
+        'page_range': page_obj.paginator.page_range,
+    }
+    
+    return render(request, 'students/student_list.html', context)

@@ -91,3 +91,32 @@ class ProfessorAEERegistrationForm(forms.ModelForm):
         
         return cleaned_data
 
+
+class StudentRegistrationForm(forms.ModelForm):
+    name = forms.CharField(max_length=150, label="Nome Completo")
+    email = forms.EmailField(label="Email")
+    birth_date = forms.DateField(label="Data de Nascimento", widget=forms.DateInput(attrs={'type': 'date'}))
+    gender = forms.CharField(max_length=10, label="Gênero")
+    birth_place = forms.CharField(max_length=100, label="Local de Nascimento")
+    phone = forms.CharField(max_length=15, label="Telefone")
+    password = forms.CharField(max_length=128, widget=forms.PasswordInput, label="Senha")
+    password_confirm = forms.CharField(max_length=128, widget=forms.PasswordInput, label="Confirmar Senha")
+    
+    enrollment_number = forms.CharField(max_length=20, label="Matrícula")
+    parent = forms.CharField(max_length=150, label="Responsável", required=False)
+    course = forms.CharField(max_length=150, label="Curso", required=False)
+
+    class Meta():
+        model = User
+        fields = ['name', 'birth_date', 'email', 'gender', 'birth_place', 'phone', 'password', 'password_confirm', 'enrollment_number', 'parent', 'course']
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password_confirm = cleaned_data.get('password_confirm')
+
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError("As senhas não coincidem.")
+        
+        return cleaned_data
+

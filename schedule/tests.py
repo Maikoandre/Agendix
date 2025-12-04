@@ -26,3 +26,21 @@ class StudentListTest(TestCase):
         self.assertRedirects(response, reverse('student_list'))
         self.assertFalse(Student.objects.filter(id=self.student.id).exists())
         self.assertFalse(User.objects.filter(id=self.user.id).exists())
+
+    def test_create_student(self):
+        response = self.client.post(reverse('create_student'), {
+            'name': 'New Student',
+            'email': 'newstudent@example.com',
+            'birth_date': '2000-01-01',
+            'gender': 'M',
+            'birth_place': 'City',
+            'phone': '123456789',
+            'password': 'password123',
+            'password_confirm': 'password123',
+            'enrollment_number': '54321',
+            'parent': 'Parent Name',
+            'course': 'Course Name'
+        })
+        self.assertRedirects(response, reverse('student_list'))
+        self.assertTrue(Student.objects.filter(enrollment_number='54321').exists())
+        self.assertTrue(User.objects.filter(email='newstudent@example.com').exists())

@@ -18,7 +18,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 
 # Importações Locais (Local App)
-from .forms import ProfessorAEERegistrationForm, SessionForm, UserForm
+from .forms import ProfessorAEERegistrationForm, SessionForm, UserForm, StudentRegistrationForm
 from .models import Professor, ProfessorAEE, Session, Student, User
 
 User = get_user_model()
@@ -219,4 +219,39 @@ def delete_student(request, pk):
         user.delete()
         messages.success(request, 'Aluno excluído com sucesso.')
         return redirect('student_list')
+
+@login_required
+def create_student(request):
+    if request.method == 'POST':
+        form = StudentRegistrationForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            try:
+                with transaction.atomic():
+                    user = User.objects.create(
+                        name=data['name'],
+                        email=data['email'],
+                        birth_date=data['birth_date'],
+                        gender=data['gender'],
+                        birth_place=data['birth_place'],
+                        phone=data['phone'],
+                        username=data['email'] # Usando email como username para garantir unicidade simples
+                    )
+                    user.set_password(data['password'])
+                    user.save()
+
+                    Student.objects.create(
+                        user=user,
+                        enrollment_number=data['enrollment_number'],
+                        parent=data['parent'],
+                        course=data['course']
+                    )
+                    messages.success(request, 'Aluno cadastrado com sucesso.')
+                    return redirect('student_list')
+            except Exception as e:
+                messages.error(request, f"Erro ao cadastrar aluno: {e}")
+    else:
+        form = StudentRegistrationForm()
+    
+    return render(request, 'students/create_student.html', {'form': form})
     return redirect('student_list')

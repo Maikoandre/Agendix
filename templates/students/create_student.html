@@ -1,0 +1,288 @@
+{% extends '_base.html' %} {% load static %} {% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4 shadow-lg">
+        <div class="card-header pb-0 pt-3 bg-transparent">
+          <h6 class="text-capitalize mb-0">Cadastrar Novo Aluno</h6>
+          <p class="text-sm text-muted mb-0">
+            Preencha os dados abaixo para registrar um novo aluno no sistema.
+          </p>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %} {% if form.non_field_errors %}
+            <div class="alert alert-danger text-white" role="alert">
+              {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+            </div>
+            {% endif %}
+
+            <h6
+              class="text-uppercase text-body text-xs font-weight-bolder mb-3"
+            >
+              Informações do Usuário
+            </h6>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label
+                    for="{{ form.name.id_for_label }}"
+                    class="form-control-label"
+                    >Nome Completo</label
+                  >
+                  <input
+                    type="text"
+                    name="{{ form.name.name }}"
+                    class="form-control"
+                    id="{{ form.name.id_for_label }}"
+                    value="{{ form.name.value|default:'' }}"
+                    required
+                  />
+                  {% if form.name.errors %}
+                  <small class="text-danger">{{ form.name.errors.0 }}</small>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label
+                    for="{{ form.email.id_for_label }}"
+                    class="form-control-label"
+                    >Email</label
+                  >
+                  <input
+                    type="email"
+                    name="{{ form.email.name }}"
+                    class="form-control"
+                    id="{{ form.email.id_for_label }}"
+                    value="{{ form.email.value|default:'' }}"
+                    required
+                  />
+                  {% if form.email.errors %}
+                  <small class="text-danger">{{ form.email.errors.0 }}</small>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label
+                    for="{{ form.birth_date.id_for_label }}"
+                    class="form-control-label"
+                    >Data de Nascimento</label
+                  >
+                  <input
+                    type="date"
+                    name="{{ form.birth_date.name }}"
+                    class="form-control"
+                    id="{{ form.birth_date.id_for_label }}"
+                    value="{{ form.birth_date.value|date:'Y-m-d'|default:'' }}"
+                    required
+                  />
+                  {% if form.birth_date.errors %}
+                  <small class="text-danger"
+                    >{{ form.birth_date.errors.0 }}</small
+                  >
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label
+                    for="{{ form.gender.id_for_label }}"
+                    class="form-control-label"
+                    >Gênero</label
+                  >
+                  <input
+                    type="text"
+                    name="{{ form.gender.name }}"
+                    class="form-control"
+                    id="{{ form.gender.id_for_label }}"
+                    value="{{ form.gender.value|default:'' }}"
+                    required
+                  />
+                  {% if form.gender.errors %}
+                  <small class="text-danger">{{ form.gender.errors.0 }}</small>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label
+                    for="{{ form.birth_place.id_for_label }}"
+                    class="form-control-label"
+                    >Local de Nascimento</label
+                  >
+                  <input
+                    type="text"
+                    name="{{ form.birth_place.name }}"
+                    class="form-control"
+                    id="{{ form.birth_place.id_for_label }}"
+                    value="{{ form.birth_place.value|default:'' }}"
+                    required
+                  />
+                  {% if form.birth_place.errors %}
+                  <small class="text-danger"
+                    >{{ form.birth_place.errors.0 }}</small
+                  >
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label
+                    for="{{ form.phone.id_for_label }}"
+                    class="form-control-label"
+                    >Telefone</label
+                  >
+                  <input
+                    type="text"
+                    name="{{ form.phone.name }}"
+                    class="form-control"
+                    id="{{ form.phone.id_for_label }}"
+                    value="{{ form.phone.value|default:'' }}"
+                    required
+                  />
+                  {% if form.phone.errors %}
+                  <small class="text-danger">{{ form.phone.errors.0 }}</small>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <hr class="horizontal dark my-4" />
+
+            <h6
+              class="text-uppercase text-body text-xs font-weight-bolder mb-3"
+            >
+              Informações Acadêmicas
+            </h6>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label
+                    for="{{ form.enrollment_number.id_for_label }}"
+                    class="form-control-label"
+                    >Matrícula</label
+                  >
+                  <input
+                    type="text"
+                    name="{{ form.enrollment_number.name }}"
+                    class="form-control"
+                    id="{{ form.enrollment_number.id_for_label }}"
+                    value="{{ form.enrollment_number.value|default:'' }}"
+                    required
+                  />
+                  {% if form.enrollment_number.errors %}
+                  <small class="text-danger"
+                    >{{ form.enrollment_number.errors.0 }}</small
+                  >
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label
+                    for="{{ form.course.id_for_label }}"
+                    class="form-control-label"
+                    >Curso</label
+                  >
+                  <input
+                    type="text"
+                    name="{{ form.course.name }}"
+                    class="form-control"
+                    id="{{ form.course.id_for_label }}"
+                    value="{{ form.course.value|default:'' }}"
+                  />
+                  {% if form.course.errors %}
+                  <small class="text-danger">{{ form.course.errors.0 }}</small>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label
+                    for="{{ form.parent.id_for_label }}"
+                    class="form-control-label"
+                    >Responsável</label
+                  >
+                  <input
+                    type="text"
+                    name="{{ form.parent.name }}"
+                    class="form-control"
+                    id="{{ form.parent.id_for_label }}"
+                    value="{{ form.parent.value|default:'' }}"
+                  />
+                  {% if form.parent.errors %}
+                  <small class="text-danger">{{ form.parent.errors.0 }}</small>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <hr class="horizontal dark my-4" />
+
+            <h6
+              class="text-uppercase text-body text-xs font-weight-bolder mb-3"
+            >
+              Segurança
+            </h6>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label
+                    for="{{ form.password.id_for_label }}"
+                    class="form-control-label"
+                    >Senha</label
+                  >
+                  <input
+                    type="password"
+                    name="{{ form.password.name }}"
+                    class="form-control"
+                    id="{{ form.password.id_for_label }}"
+                    required
+                  />
+                  {% if form.password.errors %}
+                  <small class="text-danger"
+                    >{{ form.password.errors.0 }}</small
+                  >
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label
+                    for="{{ form.password_confirm.id_for_label }}"
+                    class="form-control-label"
+                    >Confirmar Senha</label
+                  >
+                  <input
+                    type="password"
+                    name="{{ form.password_confirm.name }}"
+                    class="form-control"
+                    id="{{ form.password_confirm.id_for_label }}"
+                    required
+                  />
+                  {% if form.password_confirm.errors %}
+                  <small class="text-danger"
+                    >{{ form.password_confirm.errors.0 }}</small
+                  >
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+              <a href="{% url 'student_list' %}" class="btn btn-light m-0 me-2"
+                >Cancelar</a
+              >
+              <button type="submit" class="btn bg-gradient-primary m-0">
+                Cadastrar Aluno
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

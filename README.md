@@ -6,7 +6,7 @@ Agendix é um sistema de gestão para Atendimento Educacional Especializado (AEE
 
 O sistema visa auxiliar profissionais da educação na administração de atividades de AEE, fornecendo ferramentas para o cadastro de alunos e professores e controle de frequência em sessões.
 
-<img src="static/assets/img/Agendix01.png" alt="Agendix Logo">
+<img src="static/assets/img/Agendix02.png" alt="Agendix Logo">
 
 ## ✨ Funcionalidades Principais
 
